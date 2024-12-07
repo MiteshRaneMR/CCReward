@@ -61,7 +61,7 @@ onAuthStateChanged(auth, (user) => {
         console.log("Logged in as:", user.uid);
         loginPrompt.style.display = "none"; // Hide login prompt
         appContent.style.display = "block"; // Show main content
-        displayCardData(user.uid);
+        displayCardData(user.uid); // Fetch and display user-specific data
     } else {
         console.log("No user is logged in.");
         appContent.style.display = "none"; // Hide main content
