@@ -49,15 +49,22 @@ logoutBtn.addEventListener("click", async () => {
 
 // Monitor Authentication State
 onAuthStateChanged(auth, (user) => {
+    const appContent = document.getElementById("app-content"); // Main content
+    const loginPrompt = document.getElementById("login-prompt"); // Login screen
+
     if (user) {
         console.log("Logged in as:", user.uid);
-        loginBtn.classList.add("d-none"); // Hide login button
-        logoutBtn.classList.remove("d-none"); // Show logout button
+        loginBtn.classList.add("d-none");
+        logoutBtn.classList.remove("d-none");
+        loginPrompt.classList.add("d-none"); // Hide login screen
+        appContent.classList.remove("d-none"); // Show main content
         displayCardData(user.uid); // Fetch and display user-specific data
     } else {
         console.log("No user is logged in.");
-        loginBtn.classList.remove("d-none"); // Show login button
-        logoutBtn.classList.add("d-none"); // Hide logout button
+        loginBtn.classList.remove("d-none");
+        logoutBtn.classList.add("d-none");
+        appContent.classList.add("d-none"); // Hide main content
+        loginPrompt.classList.remove("d-none"); // Show login screen
         clearTableData(); // Clear the table if no user is logged in
     }
 });
