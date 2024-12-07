@@ -163,3 +163,26 @@ window.filterTable = () => {
 
 window.onload = displayCardData;
 window.deleteCard = deleteCard;
+// Feedback Form Submission
+document.getElementById('feedback-form').addEventListener('submit', async (event) => {
+    event.preventDefault(); // Prevent page refresh on form submission
+
+    // Get feedback input
+    const feedback = document.getElementById('feedback').value;
+
+    // Validate input
+    if (!feedback.trim()) {
+        alert('Feedback cannot be empty.');
+        return;
+    }
+
+    try {
+        // Save feedback to Firestore
+        await addDoc(collection(db, 'feedback'), { feedback });
+        alert('Thank you for your feedback!');
+        document.getElementById('feedback-form').reset(); // Clear the form
+    } catch (error) {
+        console.error('Error submitting feedback:', error.message);
+        alert('Failed to submit feedback. Please try again.');
+    }
+});
