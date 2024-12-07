@@ -1,37 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
-import { getAuth, onAuthStateChanged, signInWithPopup, signOut, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
-import { setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
-
-// Set the persistence to session-based (keeps user logged in only during the session)
-setPersistence(auth, browserLocalPersistence)
-    .then(() => {
-        console.log("Session persistence set to local.");
-    })
-    .catch((error) => {
-        console.error("Error setting persistence:", error.message);
-    });
-
-window.addEventListener('load', () => {
-    setTimeout(() => {
-        onAuthStateChanged(auth, (user) => {
-            const appContent = document.getElementById("app-content");
-            const loginPrompt = document.getElementById("login-prompt");
-
-            if (user) {
-                console.log("Logged in as:", user.uid);
-                loginPrompt.style.display = "none"; // Hide login prompt
-                appContent.style.display = "block"; // Show main content
-                displayCardData(user.uid);
-            } else {
-                console.log("No user is logged in.");
-                appContent.style.display = "none"; // Hide main content
-                loginPrompt.style.display = "block"; // Show login prompt
-            }
-        });
-    }, 100); // Add a small delay to make sure the page is fully loaded
-});
-
+import { getAuth, onAuthStateChanged, signInWithPopup, signOut, GoogleAuthProvider, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -49,6 +18,15 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
+
+// Set session-based persistence (for keeping the user logged in only during the session)
+setPersistence(auth, browserLocalPersistence)
+    .then(() => {
+        console.log("Session persistence set to local.");
+    })
+    .catch((error) => {
+        console.error("Error setting persistence:", error.message);
+    });
 
 // DOM Elements
 const loginBtn = document.getElementById("login-btn");
