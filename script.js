@@ -1,6 +1,18 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
 import { getAuth, onAuthStateChanged, signInWithPopup, signOut, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
+import { setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
+
+// Set the persistence to session-based (keeps user logged in only during the session)
+setPersistence(auth, browserLocalPersistence)
+    .then(() => {
+        console.log("Session persistence set to local.");
+    })
+    .catch((error) => {
+        console.error("Error setting persistence:", error.message);
+    });
+
+
 
 // Firebase configuration
 const firebaseConfig = {
