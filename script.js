@@ -12,6 +12,25 @@ setPersistence(auth, browserLocalPersistence)
         console.error("Error setting persistence:", error.message);
     });
 
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        onAuthStateChanged(auth, (user) => {
+            const appContent = document.getElementById("app-content");
+            const loginPrompt = document.getElementById("login-prompt");
+
+            if (user) {
+                console.log("Logged in as:", user.uid);
+                loginPrompt.style.display = "none"; // Hide login prompt
+                appContent.style.display = "block"; // Show main content
+                displayCardData(user.uid);
+            } else {
+                console.log("No user is logged in.");
+                appContent.style.display = "none"; // Hide main content
+                loginPrompt.style.display = "block"; // Show login prompt
+            }
+        });
+    }, 100); // Add a small delay to make sure the page is fully loaded
+});
 
 
 // Firebase configuration
