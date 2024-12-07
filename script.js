@@ -33,7 +33,7 @@ loginBtn.addEventListener("click", async () => {
         console.log("User logged in successfully.");
     } catch (error) {
         console.error("Login error:", error.message);
-        alert("Failed to log in. Please try again.");
+        alert("Login failed. Error: " + error.message);
     }
 });
 
