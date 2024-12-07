@@ -73,55 +73,9 @@ onAuthStateChanged(auth, (user) => {
 });
 
 // Add Card
-cardForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-
-    const user = auth.currentUser;
-    if (!user) {
-        alert("Please log in to add a card.");
-        return;
-    }
-
-    const pointsBalance = parseInt(pointsBalanceInput.value);
-    const conversionFactor = parseFloat(conversionFactorInput.value);
-
-    if (isNaN(pointsBalance) || pointsBalance <= 0) {
-        alert("Points Balance must be a positive number.");
-        return;
-    }
-    if (isNaN(conversionFactor) || conversionFactor <= 0) {
-        alert("Conversion Factor must be a positive number.");
-        return;
-    }
-
-    const cardData = {
-        issuingBank: document.getElementById("issuing-bank").value,
-        cardName: document.getElementById("card-name").value,
-        cardNetwork: document.getElementById("card-network").value,
-        pointsBalance,
-        conversionOption: document.getElementById("conversion-options").value,
-        conversionFactor,
-        convertedValue: parseFloat(convertedValueInput.value),
-    };
-
-    try {
-        console.log("Saving card data for user:", user.uid);
-        console.log("Card data:", cardData);
-
-        await addDoc(collection(db, `users/${user.uid}/cards`), cardData);
-        alert("Card added successfully!");
-        cardForm.reset();
-        displayCardData(user.uid);
-    } catch (error) {
-        console.error("Error adding document:", error.message);
-        alert("Failed to save card data. Error: " + error.message);
-    }
-});
-
-// Display User-Specific Card Data
 const displayCardData = async (userId) => {
     try {
-        console.log("Fetching data for user:", userId);
+        console.log("Fetching cards for user:", userId);
 
         const querySnapshot = await getDocs(collection(db, `users/${userId}/cards`));
         dataTable.innerHTML = "";
@@ -131,6 +85,8 @@ const displayCardData = async (userId) => {
             const data = doc.data();
             data.id = doc.id;
             cachedData.push(data);
+
+            console.log("Fetched card data:", data);
 
             const row = `
                 <tr>
@@ -145,6 +101,44 @@ const displayCardData = async (userId) => {
             `;
             dataTable.innerHTML += row;
         });
+
+        console.log("All card data loaded into the table.");
+    } catch (error) {
+        console.error("Error fetching card data:", error.message);
+        alert("Failed to load card data. Error: " + error.message);
+    }
+};
+// Display User-Specific Card Data
+const displayCardData = async (userId) => {
+    try {
+        console.log("Fetching cards for user:", userId);
+
+        const querySnapshot = await getDocs(collection(db, `users/${userId}/cards`));
+        dataTable.innerHTML = "";
+        cachedData = [];
+
+        querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            data.id = doc.id;
+            cachedData.push(data);
+
+            console.log("Fetched card data:", data);
+
+            const row = `
+                <tr>
+                    <td>${data.issuingBank}</td>
+                    <td>${data.cardName}</td>
+                    <td>${data.cardNetwork}</td>
+                    <td>${data.pointsBalance}</td>
+                    <td>${data.conversionOption}</td>
+                    <td>${data.convertedValue.toFixed(2)}</td>
+                    <td><button class="btn btn-danger btn-sm" onclick="deleteCard('${userId}', '${data.id}')">Delete</button></td>
+                </tr>
+            `;
+            dataTable.innerHTML += row;
+        });
+
+        console.log("All card data loaded into the table.");
     } catch (error) {
         console.error("Error fetching card data:", error.message);
         alert("Failed to load card data. Error: " + error.message);
