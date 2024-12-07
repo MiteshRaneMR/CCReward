@@ -28,6 +28,7 @@ const dataTable = document.getElementById("data-table");
 // Authentication Handlers
 loginBtn.addEventListener("click", async () => {
     try {
+        console.log("Login button clicked.");
         await signInWithPopup(auth, provider);
         console.log("User logged in successfully.");
     } catch (error) {
@@ -38,6 +39,7 @@ loginBtn.addEventListener("click", async () => {
 
 logoutBtn.addEventListener("click", async () => {
     try {
+        console.log("Logout button clicked.");
         await signOut(auth);
         console.log("User logged out successfully.");
         clearTableData();
