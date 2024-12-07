@@ -80,3 +80,22 @@ table th {
     background-color: #4CAF50;
     color: white;
 }
+.card {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.card-header {
+    text-align: center;
+    font-size: 1.25rem;
+}
+
+.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
