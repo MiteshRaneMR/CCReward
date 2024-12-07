@@ -10,6 +10,9 @@
         .d-none {
             display: none;
         }
+        body {
+            background-color: #f8f9fa;
+        }
     </style>
 </head>
 <body>
@@ -17,7 +20,7 @@
     <div id="login-prompt" class="text-center mt-5">
         <h1>Welcome to Credit Card Tracker</h1>
         <p>Please log in to access your cards.</p>
-        <button id="login-btn" class="btn btn-primary">Log In</button>
+        <button id="login-btn" class="btn btn-primary">Log In with Google</button>
     </div>
 
     <!-- Main App Content -->
@@ -111,5 +114,16 @@
         </main>
     </div>
 </body>
+<script>
+    // Placeholder for search filtering function
+    function filterTable() {
+        console.log("Filter table triggered.");
+    }
+
+    // Placeholder for sorting function
+    function sortTable(column) {
+        console.log("Sort table by:", column);
+    }
+</script>
 <script src="script.js" type="module"></script>
 </html>
