@@ -1,6 +1,16 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
-import { getAuth, onAuthStateChanged, signInWithPopup, signOut, GoogleAuthProvider, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
+import { 
+    getAuth, 
+    onAuthStateChanged, 
+    signInWithPopup, 
+    signOut, 
+    GoogleAuthProvider, 
+    createUserWithEmailAndPassword, 
+    signInWithEmailAndPassword, 
+    setPersistence, 
+    browserLocalPersistence 
+} from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -27,6 +37,10 @@ setPersistence(auth, browserLocalPersistence)
 // DOM Elements
 const loginBtn = document.getElementById("login-btn");
 const logoutBtn = document.getElementById("logout-btn");
+const emailLoginBtn = document.getElementById("email-login-btn");
+const emailSignupBtn = document.getElementById("email-signup-btn");
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
 const cardForm = document.getElementById("card-form");
 const dataTable = document.getElementById("data-table");
 const pointsBalanceInput = document.getElementById("points-balance");
@@ -34,17 +48,60 @@ const conversionFactorInput = document.getElementById("conversion-factor");
 const convertedValueInput = document.getElementById("converted-value");
 
 // Authentication Handlers
+
+// Google Login
 loginBtn.addEventListener("click", async () => {
     try {
-        console.log("Login button clicked.");
+        console.log("Google login button clicked.");
         const result = await signInWithPopup(auth, provider);
-        console.log("User logged in successfully:", result.user);
+        console.log("Google login successful:", result.user);
     } catch (error) {
-        console.error("Login error:", error.message);
+        console.error("Google login error:", error.message);
         alert("Login failed. Error: " + error.message);
     }
 });
 
+// Email/Password Login
+emailLoginBtn.addEventListener("click", async () => {
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
+
+    if (!email || !password) {
+        alert("Please enter a valid email and password.");
+        return;
+    }
+
+    try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        console.log("Email login successful:", userCredential.user);
+        alert("Logged in successfully.");
+    } catch (error) {
+        console.error("Email login error:", error.message);
+        alert("Failed to log in. Error: " + error.message);
+    }
+});
+
+// Email/Password Sign-Up
+emailSignupBtn.addEventListener("click", async () => {
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
+
+    if (!email || !password) {
+        alert("Please enter a valid email and password.");
+        return;
+    }
+
+    try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        console.log("User signed up successfully:", userCredential.user);
+        alert("Account created successfully. You can now log in.");
+    } catch (error) {
+        console.error("Sign-up error:", error.message);
+        alert("Failed to create account. Error: " + error.message);
+    }
+});
+
+// Logout
 logoutBtn.addEventListener("click", async () => {
     try {
         console.log("Logout button clicked.");
