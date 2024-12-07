@@ -24,6 +24,9 @@ const loginBtn = document.getElementById("login-btn");
 const logoutBtn = document.getElementById("logout-btn");
 const cardForm = document.getElementById("card-form");
 const dataTable = document.getElementById("data-table");
+const pointsBalanceInput = document.getElementById("points-balance");
+const conversionFactorInput = document.getElementById("conversion-factor");
+const convertedValueInput = document.getElementById("converted-value");
 
 // Authentication Handlers
 loginBtn.addEventListener("click", async () => {
@@ -66,6 +69,18 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
+// Auto-calculate the converted value when points or conversion factor changes
+const updateConvertedValue = () => {
+    const pointsBalance = parseFloat(pointsBalanceInput.value) || 0;
+    const conversionFactor = parseFloat(conversionFactorInput.value) || 0;
+    const convertedValue = pointsBalance * conversionFactor;
+    convertedValueInput.value = convertedValue.toFixed(2);
+};
+
+// Event listeners for calculating converted value on input
+pointsBalanceInput.addEventListener("input", updateConvertedValue);
+conversionFactorInput.addEventListener("input", updateConvertedValue);
+
 // Add Card
 cardForm.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -76,6 +91,7 @@ cardForm.addEventListener("submit", async (event) => {
         return;
     }
 
+    // Get card data
     const cardData = {
         issuingBank: document.getElementById("issuing-bank").value,
         cardName: document.getElementById("card-name").value,
@@ -83,7 +99,7 @@ cardForm.addEventListener("submit", async (event) => {
         pointsBalance: parseInt(document.getElementById("points-balance").value),
         conversionOption: document.getElementById("conversion-options").value,
         conversionFactor: parseFloat(document.getElementById("conversion-factor").value),
-        convertedValue: parseFloat(document.getElementById("converted-value").value)
+        convertedValue: parseFloat(document.getElementById("converted-value").value) // Get the auto-calculated value
     };
 
     try {
