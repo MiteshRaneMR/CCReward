@@ -19,14 +19,10 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
-// Set session-based persistence (for keeping the user logged in only during the session)
+// Set session-based persistence
 setPersistence(auth, browserLocalPersistence)
-    .then(() => {
-        console.log("Session persistence set to local.");
-    })
-    .catch((error) => {
-        console.error("Error setting persistence:", error.message);
-    });
+    .then(() => console.log("Session persistence set to local."))
+    .catch((error) => console.error("Error setting persistence:", error.message));
 
 // DOM Elements
 const loginBtn = document.getElementById("login-btn");
@@ -41,8 +37,8 @@ const convertedValueInput = document.getElementById("converted-value");
 loginBtn.addEventListener("click", async () => {
     try {
         console.log("Login button clicked.");
-        await signInWithPopup(auth, provider);
-        console.log("User logged in successfully.");
+        const result = await signInWithPopup(auth, provider);
+        console.log("User logged in successfully:", result.user);
     } catch (error) {
         console.error("Login error:", error.message);
         alert("Login failed. Error: " + error.message);
@@ -63,19 +59,19 @@ logoutBtn.addEventListener("click", async () => {
 
 // Monitor Authentication State
 onAuthStateChanged(auth, (user) => {
-    const appContent = document.getElementById("app-content"); // Main content
-    const loginPrompt = document.getElementById("login-prompt"); // Login screen
+    console.log("Authentication state changed:", user);
 
-    console.log("Auth state changed:", user);
+    const appContent = document.getElementById("app-content");
+    const loginPrompt = document.getElementById("login-prompt");
 
     if (user) {
-        console.log("User logged in:", user.uid);
+        console.log("User is authenticated:", user.uid);
         loginPrompt.style.display = "none"; // Hide login prompt
-        appContent.style.display = "block"; // Show main content
-        displayCardData(user.uid); // Fetch and display user-specific data
+        appContent.style.display = "block"; // Show app content
+        displayCardData(user.uid); // Fetch and display user data
     } else {
-        console.log("No user is logged in.");
-        appContent.style.display = "none"; // Hide main content
+        console.log("No user is authenticated.");
+        appContent.style.display = "none"; // Hide app content
         loginPrompt.style.display = "block"; // Show login prompt
     }
 });
@@ -102,15 +98,28 @@ cardForm.addEventListener("submit", async (event) => {
         return;
     }
 
-    // Get card data
+    const issuingBank = document.getElementById("issuing-bank").value.trim();
+    const cardName = document.getElementById("card-name").value.trim();
+    const cardNetwork = document.getElementById("card-network").value;
+    const pointsBalance = parseInt(document.getElementById("points-balance").value);
+    const conversionOption = document.getElementById("conversion-options").value;
+    const conversionFactor = parseFloat(document.getElementById("conversion-factor").value);
+    const convertedValue = parseFloat(document.getElementById("converted-value").value);
+
+    // Validate inputs
+    if (!issuingBank || !cardName || !cardNetwork || isNaN(pointsBalance) || isNaN(conversionFactor) || isNaN(convertedValue)) {
+        alert("Please fill out all fields correctly.");
+        return;
+    }
+
     const cardData = {
-        issuingBank: document.getElementById("issuing-bank").value,
-        cardName: document.getElementById("card-name").value,
-        cardNetwork: document.getElementById("card-network").value,
-        pointsBalance: parseInt(document.getElementById("points-balance").value),
-        conversionOption: document.getElementById("conversion-options").value,
-        conversionFactor: parseFloat(document.getElementById("conversion-factor").value),
-        convertedValue: parseFloat(document.getElementById("converted-value").value) // Get the auto-calculated value
+        issuingBank,
+        cardName,
+        cardNetwork,
+        pointsBalance,
+        conversionOption,
+        conversionFactor,
+        convertedValue
     };
 
     try {
@@ -133,6 +142,12 @@ const displayCardData = async (userId) => {
 
         const querySnapshot = await getDocs(collection(db, `users/${userId}/cards`));
         dataTable.innerHTML = ""; // Clear existing rows
+
+        if (querySnapshot.empty) {
+            console.log("No card data found.");
+            dataTable.innerHTML = `<tr><td colspan="7">No cards found. Add a new card to get started.</td></tr>`;
+            return;
+        }
 
         querySnapshot.forEach((doc) => {
             const data = doc.data();
