@@ -18,9 +18,6 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
-// Cached data
-let cachedData = [];
-
 // DOM Elements
 const cardForm = document.getElementById("card-form");
 const pointsBalanceInput = document.getElementById("points-balance");
@@ -63,10 +60,12 @@ logoutBtn.addEventListener("click", async () => {
 // Monitor Authentication State
 onAuthStateChanged(auth, (user) => {
     if (user) {
+        console.log("Logged in as:", user.uid);
         loginBtn.classList.add("d-none");
         logoutBtn.classList.remove("d-none");
         displayCardData(user.uid);
     } else {
+        console.log("No user logged in.");
         loginBtn.classList.remove("d-none");
         logoutBtn.classList.add("d-none");
         clearTableData();
@@ -106,6 +105,9 @@ cardForm.addEventListener("submit", async (event) => {
     };
 
     try {
+        console.log("Saving card data for user:", user.uid);
+        console.log("Card data:", cardData);
+
         await addDoc(collection(db, `users/${user.uid}/cards`), cardData);
         alert("Card added successfully!");
         cardForm.reset();
@@ -119,6 +121,8 @@ cardForm.addEventListener("submit", async (event) => {
 // Display User-Specific Card Data
 const displayCardData = async (userId) => {
     try {
+        console.log("Fetching data for user:", userId);
+
         const querySnapshot = await getDocs(collection(db, `users/${userId}/cards`));
         dataTable.innerHTML = "";
         cachedData = [];
@@ -162,6 +166,25 @@ const deleteCard = async (userId, docId) => {
 // Clear Table Data on Logout
 const clearTableData = () => {
     dataTable.innerHTML = "";
+};
+
+// Test Adding Data
+const testAddData = async () => {
+    try {
+        const user = auth.currentUser;
+        if (!user) {
+            console.error("No user is logged in.");
+            return;
+        }
+
+        const testData = { testField: "Test Value" };
+        console.log("Adding test data:", testData);
+
+        await addDoc(collection(db, `users/${user.uid}/cards`), testData);
+        console.log("Test data added successfully.");
+    } catch (error) {
+        console.error("Error adding test data:", error.message);
+    }
 };
 
 // Attach Delete Function to Window (for dynamic buttons)
