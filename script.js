@@ -56,18 +56,13 @@ onAuthStateChanged(auth, (user) => {
 
     if (user) {
         console.log("Logged in as:", user.uid);
-        loginBtn.classList.add("d-none");
-        logoutBtn.classList.remove("d-none");
-        loginPrompt.classList.add("d-none"); // Hide login screen
-        appContent.classList.remove("d-none"); // Show main content
-        displayCardData(user.uid); // Fetch and display user-specific data
+        loginPrompt.style.display = "none"; // Hide login prompt
+        appContent.style.display = "block"; // Show main content
+        displayCardData(user.uid);
     } else {
         console.log("No user is logged in.");
-        loginBtn.classList.remove("d-none");
-        logoutBtn.classList.add("d-none");
-        appContent.classList.add("d-none"); // Hide main content
-        loginPrompt.classList.remove("d-none"); // Show login screen
-        clearTableData(); // Clear the table if no user is logged in
+        appContent.style.display = "none"; // Hide main content
+        loginPrompt.style.display = "block"; // Show login prompt
     }
 });
 
