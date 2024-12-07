@@ -66,8 +66,10 @@ onAuthStateChanged(auth, (user) => {
     const appContent = document.getElementById("app-content"); // Main content
     const loginPrompt = document.getElementById("login-prompt"); // Login screen
 
+    console.log("Auth state changed:", user);
+
     if (user) {
-        console.log("Logged in as:", user.uid);
+        console.log("User logged in:", user.uid);
         loginPrompt.style.display = "none"; // Hide login prompt
         appContent.style.display = "block"; // Show main content
         displayCardData(user.uid); // Fetch and display user-specific data
