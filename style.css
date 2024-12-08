@@ -7,6 +7,14 @@ body {
     color: #333;
 }
 
+#app-content {
+    display: none; /* Default hidden */
+}
+
+#login-prompt {
+    display: block; /* Default visible */
+}
+
 /* Header styling */
 header {
     text-align: center;
