@@ -53,15 +53,18 @@ const convertedValueInput = document.getElementById("converted-value");
 onAuthStateChanged(auth, (user) => {
     console.log("Authentication state changed:", user);
 
+    const appContent = document.getElementById("app-content");
+    const loginPrompt = document.getElementById("login-prompt");
+
     if (user) {
         console.log("User is authenticated:", user.uid);
-        loginPrompt.style.display = "none"; // Hide login prompt
-        appContent.style.display = "block"; // Show app content
+        loginPrompt.classList.add("d-none"); // Hide login prompt
+        appContent.classList.remove("d-none"); // Show app content
         displayCardData(user.uid); // Fetch and display user data
     } else {
         console.log("No user is authenticated.");
-        appContent.style.display = "none"; // Hide app content
-        loginPrompt.style.display = "block"; // Show login prompt
+        appContent.classList.add("d-none"); // Hide app content
+        loginPrompt.classList.remove("d-none"); // Show login prompt
     }
 });
 
