@@ -1,15 +1,15 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
-import { 
-    getAuth, 
-    onAuthStateChanged, 
-    signInWithPopup, 
-    signOut, 
-    GoogleAuthProvider, 
-    createUserWithEmailAndPassword, 
-    signInWithEmailAndPassword, 
-    setPersistence, 
-    browserLocalPersistence 
+import {
+    getAuth,
+    onAuthStateChanged,
+    signInWithPopup,
+    signOut,
+    GoogleAuthProvider,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    setPersistence,
+    browserLocalPersistence
 } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
 
 // Firebase configuration
@@ -41,13 +41,29 @@ const emailLoginBtn = document.getElementById("email-login-btn");
 const emailSignupBtn = document.getElementById("email-signup-btn");
 const emailInput = document.getElementById("email");
 const passwordInput = document.getElementById("password");
+const appContent = document.getElementById("app-content");
+const loginPrompt = document.getElementById("login-prompt");
 const cardForm = document.getElementById("card-form");
 const dataTable = document.getElementById("data-table");
 const pointsBalanceInput = document.getElementById("points-balance");
 const conversionFactorInput = document.getElementById("conversion-factor");
 const convertedValueInput = document.getElementById("converted-value");
 
-// Authentication Handlers
+// Monitor Authentication State
+onAuthStateChanged(auth, (user) => {
+    console.log("Authentication state changed:", user);
+
+    if (user) {
+        console.log("User is authenticated:", user.uid);
+        loginPrompt.style.display = "none"; // Hide login prompt
+        appContent.style.display = "block"; // Show app content
+        displayCardData(user.uid); // Fetch and display user data
+    } else {
+        console.log("No user is authenticated.");
+        appContent.style.display = "none"; // Hide app content
+        loginPrompt.style.display = "block"; // Show login prompt
+    }
+});
 
 // Google Login
 loginBtn.addEventListener("click", async () => {
@@ -111,25 +127,6 @@ logoutBtn.addEventListener("click", async () => {
     } catch (error) {
         console.error("Logout error:", error.message);
         alert("Failed to log out. Please try again.");
-    }
-});
-
-// Monitor Authentication State
-onAuthStateChanged(auth, (user) => {
-    console.log("Authentication state changed:", user);
-
-    const appContent = document.getElementById("app-content");
-    const loginPrompt = document.getElementById("login-prompt");
-
-    if (user) {
-        console.log("User is authenticated:", user.uid);
-        loginPrompt.style.display = "none"; // Hide login prompt
-        appContent.style.display = "block"; // Show app content
-        displayCardData(user.uid); // Fetch and display user data
-    } else {
-        console.log("No user is authenticated.");
-        appContent.style.display = "none"; // Hide app content
-        loginPrompt.style.display = "block"; // Show login prompt
     }
 });
 
