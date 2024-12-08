@@ -75,46 +75,6 @@ loginBtn.addEventListener("click", async () => {
     }
 });
 
-// Email/Password Login
-emailLoginBtn.addEventListener("click", async () => {
-    const email = emailInput.value.trim();
-    const password = passwordInput.value.trim();
-
-    if (!email || !password) {
-        alert("Please enter a valid email and password.");
-        return;
-    }
-
-    try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        console.log("Email login successful:", userCredential.user);
-        alert("Logged in successfully.");
-    } catch (error) {
-        console.error("Email login error:", error.message);
-        alert("Failed to log in. Error: " + error.message);
-    }
-});
-
-// Email/Password Sign-Up
-emailSignupBtn.addEventListener("click", async () => {
-    const email = emailInput.value.trim();
-    const password = passwordInput.value.trim();
-
-    if (!email || !password) {
-        alert("Please enter a valid email and password.");
-        return;
-    }
-
-    try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        console.log("User signed up successfully:", userCredential.user);
-        alert("Account created successfully. You can now log in.");
-    } catch (error) {
-        console.error("Sign-up error:", error.message);
-        alert("Failed to create account. Error: " + error.message);
-    }
-});
-
 // Logout
 logoutBtn.addEventListener("click", async () => {
     try {
