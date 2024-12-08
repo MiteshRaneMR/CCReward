@@ -37,11 +37,6 @@ setPersistence(auth, browserLocalPersistence)
 // DOM Elements
 const loginBtn = document.getElementById("login-btn");
 const logoutBtn = document.getElementById("logout-btn");
-const emailLoginBtn = document.getElementById("email-login-btn");
-const emailSignupBtn = document.getElementById("email-signup-btn");
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
-const appContent = document.getElementById("app-content");
 const loginPrompt = document.getElementById("login-prompt");
 const cardForm = document.getElementById("card-form");
 const dataTable = document.getElementById("data-table");
